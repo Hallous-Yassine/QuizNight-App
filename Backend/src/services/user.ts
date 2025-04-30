@@ -66,9 +66,35 @@ const findOneBy = async (field: string, value: string) => {
   }
 }
 
+const getUserScore = async (id: number) => {
+  try {
+    const user = await userRepository.findOneBy({ id });
+    if (!user) {
+      throw new Error('User not found');
+    }
+    return user.score;
+  } catch (error) {
+    throw new Error('Error : Cannot get user score');
+  }
+}
+
+const updateUserScore = async (id: number, score: number) => {
+  try {
+    const user = await userRepository.findOneBy({ id });
+    if (!user) {
+      throw new Error('User not found');
+    }
+    user.score = score;
+    await userRepository.save(user);
+    return user;
+  } catch (error) {
+    throw new Error('Error : Cannot update user score');
+  }
+}
+
 
 export {
-  getAllUsers, getUserById, createUser, updateUser, deleteUser, findOneBy
+  getAllUsers, getUserById, createUser, updateUser, deleteUser, findOneBy , getUserScore, updateUserScore
 };
 
 

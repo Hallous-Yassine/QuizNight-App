@@ -1,54 +1,51 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     // Sample quiz data
     const quizData = [
-        {
-            word: 'Schedule',
-            accents: [
-                { type: 'British', audio: '../assets/audio/sample-british.mp3' },
-                { type: 'American', audio: '../assets/audio/sample-american.mp3' },
-            ],
-        },
-        {
-            word: 'Aluminium',
-            accents: [
-                { type: 'British', audio: '../assets/audio/sample-british.mp3' },
-                { type: 'American', audio: '../assets/audio/sample-american.mp3' },
-            ],
-        },
-        {
-            word: 'Tomato',
-            accents: [
-                { type: 'British', audio: '../assets/audio/sample-british.mp3' },
-                { type: 'American', audio: '../assets/audio/sample-american.mp3' },
-            ],
-        },
-        {
-            word: 'Advertisement',
-            accents: [
-                { type: 'British', audio: '../assets/audio/sample-british.mp3' },
-                { type: 'American', audio: '../assets/audio/sample-american.mp3' },
-            ],
-        },
-        {
-            word: 'Garage',
-            accents: [
-                { type: 'British', audio: '../assets/audio/sample-british.mp3' },
-                { type: 'American', audio: '../assets/audio/sample-american.mp3' },
-            ],
-        },
+        { word: 'Schedule', accents: [
+            { type: 'British', audio: '../assets/audio/sample-british.mp3' },
+            { type: 'American', audio: '../assets/audio/sample-american.mp3' },
+        ]},
+        { word: 'Aluminium', accents: [
+            { type: 'British', audio: '../assets/audio/sample-british.mp3' },
+            { type: 'American', audio: '../assets/audio/sample-american.mp3' },
+        ]},
+        { word: 'Tomato', accents: [
+            { type: 'British', audio: '../assets/audio/sample-british.mp3' },
+            { type: 'American', audio: '../assets/audio/sample-american.mp3' },
+        ]},
+        { word: 'Advertisement', accents: [
+            { type: 'British', audio: '../assets/audio/sample-british.mp3' },
+            { type: 'American', audio: '../assets/audio/sample-american.mp3' },
+        ]},
+        { word: 'Garage', accents: [
+            { type: 'British', audio: '../assets/audio/sample-british.mp3' },
+            { type: 'American', audio: '../assets/audio/sample-american.mp3' },
+        ]},
     ];
 
-    // User data
-    let user = JSON.parse(localStorage.getItem('user')) || {
-        full_name: 'Guest User',
-        email: 'guest@example.com',
-    };
+    // Check authentication
+    const token = localStorage.getItem('token');
+    let user;
+    try {
+        user = JSON.parse(localStorage.getItem('user'));
+    } catch (error) {
+        console.error('Error parsing user data from localStorage:', error);
+    }
+
+    if (!token || !user || !user.id) {
+        console.log('Authentication failed: Missing token or user data', { token, user });
+        alert('Please log in to play the quiz.');
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        window.location.href = 'login.html';
+        return;
+    }
 
     // Quiz State
     let currentQuestion = 0;
     let score = 0;
     let selectedAccent = null;
-    let hasPlayedAudio = false; // Track audio playback
+    let hasPlayedAudio = false;
 
     // Elements
     const quizCard = document.querySelector('.quiz-card');
@@ -76,18 +73,44 @@ document.addEventListener('DOMContentLoaded', () => {
         quizCard.style.opacity = '1';
     }, 100);
 
-    // Initialize
-    profileNameEl.textContent = user.full_name;
-    profileEmailEl.textContent = user.email;
-    profileScoreEl.textContent = localStorage.getItem('bestScore') || 0;
-    totalQuestionsEl.textContent = quizData.length;
+    // Initialize profile
+    profileNameEl.textContent = user.full_name || 'Guest User';
+    profileEmailEl.textContent = user.email || 'guest@example.com';
+
+    // Fetch and display user's best score
+    const fetchBestScore = async () => {
+        try {
+            const response = await fetch(`http://localhost:3000/user/score/${user.id}`, {
+                headers: { 'Authorization': `Bearer ${token}` },
+            });
+            if (!response.ok) {
+                if (response.status === 401) {
+                    throw new Error('Unauthorized: Invalid or expired token');
+                }
+                throw new Error(`Failed to fetch score: ${response.status}`);
+            }
+            const data = await response.json();
+            profileScoreEl.textContent = data.score || 0;
+        } catch (error) {
+            console.error('Error fetching best score:', error);
+            if (error.message.includes('Unauthorized')) {
+                alert('Session expired. Please log in again.');
+                localStorage.removeItem('token');
+                localStorage.removeItem('user');
+                window.location.href = 'login.html';
+            } else {
+                profileScoreEl.textContent = 0;
+            }
+        }
+    };
+    await fetchBestScore();
 
     // Profile Toggle
     profileToggle.addEventListener('click', () => {
         profileContent.classList.toggle('active');
     });
 
-    // Logout
+    // Logout (handled in global.js, but keep for sidebar)
     logoutBtn.addEventListener('click', () => {
         localStorage.removeItem('user');
         localStorage.removeItem('token');
@@ -107,10 +130,10 @@ document.addEventListener('DOMContentLoaded', () => {
         feedbackEl.textContent = '';
         feedbackEl.className = 'feedback';
         nextQuestionBtn.style.display = 'none';
-        chooseBritishBtn.disabled = true; // Disable by default
-        chooseAmericanBtn.disabled = true; // Disable by default
+        chooseBritishBtn.disabled = true;
+        chooseAmericanBtn.disabled = true;
         audioPlayBtn.classList.remove('playing');
-        hasPlayedAudio = false; // Reset audio play state
+        hasPlayedAudio = false;
     };
 
     const playAudio = (src) => {
@@ -119,8 +142,8 @@ document.addEventListener('DOMContentLoaded', () => {
         audio.play();
         audio.onended = () => {
             audioPlayBtn.classList.remove('playing');
-            hasPlayedAudio = true; // Mark audio as played
-            chooseBritishBtn.disabled = false; // Enable answer buttons
+            hasPlayedAudio = true;
+            chooseBritishBtn.disabled = false;
             chooseAmericanBtn.disabled = false;
         };
     };
@@ -137,7 +160,6 @@ document.addEventListener('DOMContentLoaded', () => {
             score += 10;
             feedbackEl.textContent = 'Correct! Well done!';
             feedbackEl.className = 'feedback correct';
-            // Confetti effect
             for (let i = 0; i < 20; i++) {
                 const confetti = document.createElement('div');
                 confetti.className = 'confetti';
@@ -166,18 +188,44 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    nextQuestionBtn.addEventListener('click', () => {
+    nextQuestionBtn.addEventListener('click', async () => {
         currentQuestion++;
         if (currentQuestion < quizData.length) {
             loadQuestion();
         } else {
-            // Update best score
-            const bestScore = Math.max(score, parseInt(localStorage.getItem('bestScore') || 0));
-            localStorage.setItem('bestScore', bestScore);
-            localStorage.setItem('finalScore', score);
-            window.location.href = 'retry.html';
+            try {
+                const response = await fetch(`http://localhost:3000/user/score/${user.id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ score }),
+                });
+                if (!response.ok) {
+                    if (response.status === 401) {
+                        throw new Error('Unauthorized: Invalid or expired token');
+                    }
+                    throw new Error(`Failed to update score: ${response.status}`);
+                }
+                localStorage.setItem('finalScore', score);
+                window.location.href = 'retry.html';
+            } catch (error) {
+                console.error('Error updating score:', error);
+                if (error.message.includes('Unauthorized')) {
+                    alert('Session expired. Please log in again.');
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('user');
+                    window.location.href = 'login.html';
+                } else {
+                    alert('Failed to save score. Proceeding to results.');
+                    localStorage.setItem('finalScore', score);
+                    window.location.href = 'retry.html';
+                }
+            }
         }
     });
 
+    totalQuestionsEl.textContent = quizData.length;
     loadQuestion();
 });

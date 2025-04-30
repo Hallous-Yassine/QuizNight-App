@@ -3,25 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Accent Arena - Welcome</title>
+    <title>Accent Arena - Home</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../styles/auth.css">
+    <link rel="stylesheet" href="../styles/global.css">
 </head>
 <body>
-    <div class="container hero">
+    <nav class="navbar">
+        <a href="index.html" class="navbar-brand">Accent Arena</a>
+        <div class="navbar-links">
+            <a href="quiz.html">Play Quiz</a>
+            <a href="userList.html">Leaderboard</a>
+            <a href="login.html">Login</a>
+            <a href="signup.html">Sign Up</a>
+            <button class="logout-btn">Log Out</button>
+        </div>
+    </nav>
+    <div class="container">
         <div class="hero-card">
-            <h1 class="title">Accent Arena</h1>
-            <p class="subtitle">Sharpen your ear! Can you spot the difference between British and American accents?</p>
-            <div class="button-group">
-                <a href="login.html" class="btn primary-btn">Log In</a>
-                <a href="signup.html" class="btn secondary-btn">Sign Up</a>
+            <h1 class="title">Welcome to Accent Arena</h1>
+            <p class="subtitle">Test your ear for accents! Can you distinguish British from American pronunciations?</p>
+            <div class="hero-actions">
+                <a href="quiz.html" class="btn primary-btn">Start Quiz</a>
+                <a href="userList.html" class="btn secondary-btn">View Leaderboard</a>
             </div>
         </div>
-        <div class="particles"></div>
     </div>
-    <footer class="footer">
-        <p>Powered by xAI</p>
-    </footer>
-    <script src="../scripts/auth.js"></script>
+    <script src="../scripts/global.js"></script>
 </body>
 </html>

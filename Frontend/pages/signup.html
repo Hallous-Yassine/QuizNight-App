@@ -5,32 +5,42 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Accent Arena - Sign Up</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../styles/global.css">
     <link rel="stylesheet" href="../styles/auth.css">
 </head>
 <body>
-    <div class="container signup">
+    <nav class="navbar">
+        <a href="index.html" class="navbar-brand">Accent Arena</a>
+        <div class="navbar-links">
+            <a href="quiz.html">Play Quiz</a>
+            <a href="userList.html">Leaderboard</a>
+            <a href="login.html">Login</a>
+            <a href="signup.html">Sign Up</a>
+            <button class="logout-btn">Log Out</button>
+        </div>
+    </nav>
+    <div class="container">
         <div class="auth-card">
-            <h1 class="title">Accent Arena</h1>
-            <p class="subtitle">Sign up to join the accent challenge</p>
+            <h1 class="title">Sign Up for Accent Arena</h1>
             <form id="signup-form">
-                <div class="input-group">
-                    <input type="text" id="signup-full-name" placeholder="Full Name" required>
+                <div class="form-group">
+                    <label for="full-name">Full Name</label>
+                    <input type="text" id="full-name" name="full-name" required>
                 </div>
-                <div class="input-group">
-                    <input type="email" id="signup-email" placeholder="Email" required>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required>
                 </div>
-                <div class="input-group">
-                    <input type="tel" id="signup-phone" placeholder="Phone Number" required>
-                </div>
-                <div class="input-group">
-                    <input type="password" id="signup-password" placeholder="Password" required>
-                    <div id="password-strength" class="strength-meter"></div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required>
                 </div>
                 <button type="submit" class="btn primary-btn">Sign Up</button>
             </form>
-            <p class="switch-auth">Already have an account? <a href="login.html">Log In</a></p>
+            <p class="switch-auth">Already have an account? <a href="login.html">Login</a></p>
         </div>
     </div>
+    <script src="../scripts/global.js"></script>
     <script src="../scripts/auth.js"></script>
 </body>
 </html>

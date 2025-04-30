@@ -1,11 +1,26 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Login Form Submission
+    // Login Form
     const loginForm = document.getElementById('login-form');
     if (loginForm) {
         loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            const email = document.getElementById('login-email').value;
-            const password = document.getElementById('login-password').value;
+
+            const emailInput = document.getElementById('email');
+            const passwordInput = document.getElementById('password');
+
+            if (!emailInput || !passwordInput) {
+                console.error('Login form inputs not found. Expected IDs: email, password');
+                alert('Form error: Email or password field is missing.');
+                return;
+            }
+
+            const email = emailInput.value.trim();
+            const password = passwordInput.value.trim();
+
+            if (!email || !password) {
+                alert('Please enter both email and password.');
+                return;
+            }
 
             try {
                 const response = await fetch('http://localhost:3000/user/login', {
@@ -17,33 +32,56 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
 
                 const data = await response.json();
-
-                if (response.ok) {
-                    // Store user data
-                    const user = { full_name: data.user?.full_name || email.split('@')[0], email };
-                    localStorage.setItem('user', JSON.stringify(user));
-                    localStorage.setItem('token', data.token || 'dummy-token');
-                    alert('Login successful! Welcome to Accent Arena.');
-                    window.location.href = 'quiz.html';
-                } else {
-                    alert(`Login failed: ${data.error || 'Invalid credentials'}`);
+                if (!response.ok) {
+                    throw new Error(data.message || 'Login failed');
                 }
+
+                // Validate response
+                if (!data.token || !data.user || !data.user.id) {
+                    throw new Error('Invalid response format: Missing token or user data');
+                }
+
+                // Store token and user in localStorage
+                localStorage.setItem('token', data.token);
+                localStorage.setItem('user', JSON.stringify({
+                    id: data.user.id,
+                    full_name: data.user.full_name,
+                    email: data.user.email,
+                }));
+
+                alert('Login successful!');
+                window.location.href = 'index.html';
             } catch (error) {
-                alert('Error connecting to server. Please try again later.');
                 console.error('Login error:', error);
+                alert(`Login failed: ${error.message}`);
             }
         });
     }
 
-    // Signup Form Submission
+    // Signup Form
     const signupForm = document.getElementById('signup-form');
     if (signupForm) {
         signupForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            const full_name = document.getElementById('signup-full-name').value;
-            const email = document.getElementById('signup-email').value;
-            const phone = document.getElementById('signup-phone').value;
-            const password = document.getElementById('signup-password').value;
+
+            const fullNameInput = document.getElementById('full-name');
+            const emailInput = document.getElementById('email');
+            const passwordInput = document.getElementById('password');
+
+            if (!fullNameInput || !emailInput || !passwordInput) {
+                console.error('Signup form inputs not found. Expected IDs: full-name, email, password');
+                alert('Form error: One or more fields are missing.');
+                return;
+            }
+
+            const full_name = fullNameInput.value.trim();
+            const email = emailInput.value.trim();
+            const password = passwordInput.value.trim();
+
+            if (!full_name || !email || !password) {
+                alert('Please fill in all fields.');
+                return;
+            }
 
             try {
                 const response = await fetch('http://localhost:3000/user/', {
@@ -51,35 +89,32 @@ document.addEventListener('DOMContentLoaded', () => {
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ full_name, email, phone, password }),
+                    body: JSON.stringify({ full_name, email, password }),
                 });
 
                 const data = await response.json();
-
-                if (response.ok) {
-                    alert('Signup successful! Please log in.');
-                    window.location.href = 'login.html';
-                } else {
-                    alert(`Signup failed: ${data.error || 'Invalid input'}`);
+                if (!response.ok) {
+                    throw new Error(data.message || 'Signup failed');
                 }
+
+                // Validate response
+                if (!data.token || !data.user || !data.user.id) {
+                    throw new Error('Invalid response format: Missing token or user data');
+                }
+
+                // Store token and user in localStorage
+                localStorage.setItem('token', data.token);
+                localStorage.setItem('user', JSON.stringify({
+                    id: data.user.id,
+                    full_name: data.user.full_name,
+                    email: data.user.email,
+                }));
+
+                alert('Signup successful!');
+                window.location.href = 'index.html';
             } catch (error) {
-                alert('Error connecting to server. Please try again later.');
                 console.error('Signup error:', error);
-            }
-        });
-
-        // Password Strength Checker
-        const passwordInput = document.getElementById('signup-password');
-        const strengthMeter = document.getElementById('password-strength');
-
-        passwordInput.addEventListener('input', () => {
-            const value = passwordInput.value;
-            if (value.length < 6) {
-                strengthMeter.className = 'strength-meter weak';
-            } else if (value.length < 10 || !/[A-Z]/.test(value) || !/[0-9]/.test(value)) {
-                strengthMeter.className = 'strength-meter medium';
-            } else {
-                strengthMeter.className = 'strength-meter strong';
+                alert(`Signup failed: ${error.message}`);
             }
         });
     }

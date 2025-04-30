@@ -19,6 +19,9 @@ class User extends BaseEntity {
   @Column()
   password: string
 
+  @Column()
+  score: number
+
   @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
   createdAt: Date
 

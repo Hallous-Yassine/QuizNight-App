@@ -105,7 +105,8 @@ const createUser: RequestHandler = async (req, res) => {
       email: email.trim(),
       phone: phone.trim(),
       password: hashedPassword,
-    });
+      score : 0, // Default score
+      });
 
     // Remove password from response and generate JWT token
     const { password: _, ...safeUser } = newUser;
@@ -284,4 +285,50 @@ const logoutUser: RequestHandler = async (req, res) => {
   res.status(200).json({ message: "Logout successful" });
 };
 
-export { getAllUsers, getUserById, createUser, updateUser, deleteUser, loginUser, findOneBy, findOneByHandler, logoutUser };
+const getUserScore: RequestHandler = async (req, res) => {
+  const id = parseInt(req.params.id, 10);
+  if (isNaN(id)) {
+    res.status(400).json({ message: "Invalid user ID" });
+    return;
+  }
+
+  try {
+    const score = await userService.getUserScore(id);
+    if (score === null) {
+      res.status(404).json({ message: "User not found" });
+      return;
+    }
+    res.status(200).json({ score });
+  } catch (error) {
+    console.error('Get user score error:', error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+}
+
+const updateUserScore: RequestHandler = async (req, res) => {
+  const id = parseInt(req.params.id, 10);
+  const { score } = req.body as { score: number };
+
+  if (isNaN(id)) {
+    res.status(400).json({ message: "Invalid user ID" });
+    return;
+  }
+
+  try {
+    const updatedUser = await userService.updateUserScore(id, score);
+    if (!updatedUser) {
+      res.status(404).json({ message: "User not found" });
+      return;
+    }
+    res.status(200).json({
+      message: "User score updated successfully",
+      user: updatedUser,
+    });
+  } catch (error) {
+    console.error('Update user score error:', error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export { getAllUsers, getUserById, createUser, updateUser, deleteUser, loginUser, findOneBy, findOneByHandler, logoutUser , getUserScore, updateUserScore };
+

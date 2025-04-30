@@ -5,38 +5,51 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Accent Arena - Quiz</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../styles/global.css">
     <link rel="stylesheet" href="../styles/quiz.css">
 </head>
 <body>
-    <div class="container quiz">
+    <nav class="navbar">
+        <a href="index.html" class="navbar-brand">Accent Arena</a>
+        <div class="navbar-links">
+            <a href="quiz.html">Play Quiz</a>
+            <a href="userList.html">Leaderboard</a>
+            <a href="login.html">Login</a>
+            <a href="signup.html">Sign Up</a>
+            <button class="logout-btn">Log Out</button>
+        </div>
+    </nav>
+    <div class="container">
         <div class="quiz-card">
-            <h1 class="title">Accent Arena</h1>
             <div class="score-board">
                 <span>Score: <span id="score">0</span></span>
                 <span>Question: <span id="question-number">1</span>/<span id="total-questions">5</span></span>
             </div>
             <div class="progress-bar">
-                <div id="progress-fill" class="progress-fill"></div>
+                <div class="progress-fill" id="progress-fill"></div>
             </div>
             <div class="question">
                 <h2 id="word">Loading...</h2>
-                <div class="audio-controls">
-                    <button id="audio-play" class="btn audio-btn">
-                        <img src="../assets/icons/mic.png" alt="Play" class="mic-icon"> Play
-                    </button>
-                </div>
                 <p id="prompt">Is this a British or American accent?</p>
-                <div class="answer-controls">
-                    <button id="choose-british" class="btn primary-btn">
-                        <img src="../assets/icons/uk.png" alt="UK" class="flag-icon"> British
-                    </button>
-                    <button id="choose-american" class="btn primary-btn">
-                        <img src="../assets/icons/usa.png" alt="USA" class="flag-icon"> American
-                    </button>
-                </div>
-                <p id="feedback" class="feedback"></p>
             </div>
-            <button id="next-question" class="btn secondary-btn" style="display: none;">Next Question</button>
+            <div class="audio-controls">
+                <button class="btn audio-btn" id="audio-play">
+                    <img src="../assets/icons/mic.png" alt="Play Audio" class="mic-icon">
+                    Play Audio
+                </button>
+            </div>
+            <div class="answer-controls">
+                <button class="btn primary-btn" id="choose-british">
+                    <img src="../assets/icons/uk.png" alt="British Flag" class="flag-icon">
+                    British
+                </button>
+                <button class="btn primary-btn" id="choose-american">
+                    <img src="../assets/icons/usa.png" alt="American Flag" class="flag-icon">
+                    American
+                </button>
+            </div>
+            <div class="feedback" id="feedback"></div>
+            <button class="btn secondary-btn" id="next-question" style="display: none;">Next Question</button>
         </div>
         <div class="profile-sidebar">
             <button id="profile-toggle" class="profile-toggle">☰</button>
@@ -50,6 +63,7 @@
             </div>
         </div>
     </div>
+    <script src="../scripts/global.js"></script>
     <script src="../scripts/quiz.js"></script>
 </body>
 </html>

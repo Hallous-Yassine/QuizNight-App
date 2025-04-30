@@ -8,6 +8,8 @@ import {
   loginUser,
   findOneByHandler, 
   logoutUser,
+  getUserScore,
+  updateUserScore
 } from "../handlers/user"; // Adjust path as needed
 import auth from "../middleware/auth"; // Adjust path as needed
 
@@ -22,5 +24,7 @@ userRouter.delete("/:id", auth, deleteUser); // Delete user by ID (protected)
 userRouter.post("/login", loginUser); // User login (public)
 userRouter.post("/find", auth, findOneByHandler); // Find user by field (protected)
 userRouter.post("/logout", auth, logoutUser);
+userRouter.get("/score/:id", auth, getUserScore); // Get user score by ID (protected)
+userRouter.put("/score/:id", auth, updateUserScore); // Update user score by ID (protected)
 
 export default userRouter;
