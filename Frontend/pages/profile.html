@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profil - Quiz Night</title>
+  <link rel="stylesheet" href="../styles/profile.css">
+  <link href="https://fonts.googleapis.com/css2?family=Henny+Penny&family=Balsamiq+Sans&family=Roboto&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="overlay">
+    <header>
+      <div class="logo">QuizNight !</div>
+      <div class="header-buttons">
+        <button id="homeBtn" class="profile-button">Accueil</button>
+        <button id="logoutBtn" class="logout-button">
+          <img src="../assets/logout.png" alt="Logout" class="logout-icon">
+        </button>
+      </div>
+    </header>
+
+    <main>
+      <div class="main-container">
+        <div class="profile-container">
+          <div class="profile-header">
+            <h2 class="profile-title" id="profileTitle"></h2>
+          </div>
+
+          <!-- User Info Section -->
+          <div class="user-info">
+            <h3 class="section-title">Mes Informations</h3>
+            <div class="info-card">
+              <div class="info-item">
+                <label>Nom :</label>
+                <span id="fullName"></span>
+              </div>
+              <div class="info-item">
+                <label>Email :</label>
+                <span id="email"></span>
+              </div>
+              <div class="info-item">
+                <label>Score :</label>
+                <span id="score"></span>
+              </div>
+              <button id="editBtn" class="submit-button">Modifier Mes Infos</button>
+            </div>
+          </div>
+
+          <!-- Edit Form (Hidden by default) -->
+          <form id="editProfileForm" class="edit-form" style="display: none;">
+            <h3 class="section-title">Modifier Mes Informations</h3>
+            <div class="form-group">
+              <label for="editFullName">Nouveau Nom :</label>
+              <input type="text" id="editFullName" name="fullName" required>
+            </div>
+            <div class="form-group">
+              <label for="editEmail">Nouvel Email :</label>
+              <input type="email" id="editEmail" name="email" required>
+            </div>
+            <div class="form-group">
+              <label for="editPassword">Nouveau Mot de Passe (facultatif) :</label>
+              <input type="password" id="editPassword" name="password" placeholder="Laisser vide pour ne pas modifier">
+            </div>
+            <div class="form-group">
+              <label for="currentPassword">Mot de Passe Actuel (requis) :</label>
+              <input type="password" id="currentPassword" name="currentPassword" required>
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="submit-button">Sauvegarder</button>
+              <button type="button" id="cancelEditBtn" class="cancel-button">Annuler</button>
+            </div>
+          </form>
+
+          <!-- Delete Account Section -->
+          <div class="delete-account">
+            <h3 class="section-title">Supprimer Mon Compte</h3>
+            <p class="warning-text">Attention : Cette action est irréversible et supprimera toutes vos données, y compris vos quizzes.</p>
+            <div class="delete-actions">
+              <button id="deleteAccountBtn" class="delete-button">Supprimer le Compte</button>
+              <div id="deleteConfirmation" class="delete-confirmation" style="display: none;">
+                <div class="form-group">
+                  <label for="deletePassword">Veuillez entrer votre mot de passe pour confirmer :</label>
+                  <input type="password" id="deletePassword" name="deletePassword" required>
+                </div>
+                <div class="form-actions">
+                  <button id="confirmDeleteBtn" class="delete-button">Confirmer la Suppression</button>
+                  <button id="cancelDeleteBtn" class="cancel-button">Annuler</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Created Quizzes Section -->
+          <div class="created-quizzes">
+            <h3 class="section-title">Mes Quizzes Créés</h3>
+            <div id="quizzesList" class="quizzes-list"></div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      <p>© 2025 QuizNight. Tous droits réservés. Yassine Hallous</p>
+    </footer>
+  </div>
+  <script src="../scripts/profile.js"></script>
+</body>
+</html>

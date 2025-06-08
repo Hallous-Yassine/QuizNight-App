@@ -1,0 +1,354 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Roboto', sans-serif;
+  background: url('../assets/Background.png') no-repeat center center fixed;
+  background-size: cover;
+  color: white;
+  min-height: 100vh;
+  overflow-y: auto;
+}
+
+.overlay {
+  background-color: rgba(0, 0, 0, 0.7);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 20px 0;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 60px;
+  background: transparent;
+}
+
+.header-buttons {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.logo {
+  font-family: 'Henny Penny', cursive;
+  font-size: 2.8rem;
+  color: #2eddea;
+  text-shadow: 1px 1px 6px black;
+  cursor: pointer;
+  margin-bottom: 5px;
+}
+
+.profile-button, .home-button, .submit-button, .cancel-button, .delete-button {
+  font-family: 'Balsamiq Sans', cursive;
+  background-color: transparent;
+  border: 2px solid #2eddea;
+  color: white;
+  padding: 10px 20px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.profile-button:hover, .home-button:hover {
+  background-color: #2eddea;
+  color: black;
+}
+
+.submit-button:hover {
+  background-color: #2eddea;
+  color: black;
+  transform: scale(1.05);
+}
+
+.cancel-button:hover {
+  background-color: #2eddea;
+  color: black;
+  transform: scale(1.05);
+}
+
+.delete-button:hover {
+  background-color: #2eddea;
+  color: black;
+  transform: scale(1.05);
+}
+
+.logout-button {
+  font-family: 'Balsamiq Sans', cursive;
+  background-color: transparent;
+  border: 2px solid #2eddea;
+  color: white;
+  padding: 8px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logout-button:hover {
+  background-color: #2eddea;
+  color: black;
+}
+
+.logout-icon {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+}
+
+main {
+  flex: 1;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 40px 20px;
+}
+
+.main-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.profile-container {
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px solid #2eddea;
+  box-shadow: 0 0 20px rgba(46, 222, 234, 0.6);
+  border-radius: 15px;
+  padding: 30px;
+  width: 100%;
+  text-align: center;
+}
+
+.profile-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.profile-title {
+  font-family: 'Henny Penny', cursive;
+  font-size: 2.8rem;
+  color: #2eddea;
+  text-shadow: 2px 2px 8px black;
+  margin: 0;
+}
+
+.section-title {
+  font-family: 'Balsamiq Sans', cursive;
+  font-size: 1.8rem;
+  color: #2eddea;
+  margin-bottom: 20px;
+  text-shadow: 1px 1px 4px black;
+}
+
+.user-info, .delete-account, .created-quizzes {
+  margin-bottom: 30px;
+  padding: 15px;
+  border-radius: 10px;
+}
+
+.info-card {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid #2eddea;
+  border-radius: 10px;
+  padding: 15px;
+  max-width: 500px;
+  margin: 0 auto;
+  box-shadow: 0 0 10px rgba(46, 222, 234, 0.3);
+}
+
+.info-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(46, 222, 234, 0.2);
+}
+
+.info-item:last-child {
+  border-bottom: none;
+}
+
+.info-item label {
+  font-family: 'Roboto', sans-serif;
+  font-size: 1.2rem;
+  color: white;
+  font-weight: 500;
+}
+
+.info-item span {
+  font-family: 'Roboto', sans-serif;
+  font-size: 1.2rem;
+  color: #2eddea;
+}
+
+.edit-form, .delete-confirmation {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #2eddea;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(46, 222, 234, 0.3);
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.form-group label {
+  font-family: 'Balsamiq Sans', cursive;
+  font-size: 1.3rem;
+  color: white;
+  text-align: left;
+}
+
+.form-group input {
+  padding: 12px;
+  font-size: 1.2rem;
+  border: 2px solid #2eddea;
+  border-radius: 8px;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+  transition: all 0.3s ease;
+  margin-bottom: 20px;
+  margin-top: 10px;
+}
+
+.form-group input:focus {
+  outline: none;
+  background-color: rgba(46, 222, 234, 0.2);
+  box-shadow: 0 0 10px rgba(46, 222, 234, 0.6);
+}
+
+.form-actions {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.delete-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.warning-text {
+  font-family: 'Balsamiq Sans', cursive;
+  font-size: 1rem;
+  color: #ff4444;
+  margin-bottom: 15px;
+}
+
+.quizzes-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.quiz-item {
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px solid #2eddea;
+  border-radius: 8px;
+  padding: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.quiz-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(46, 222, 234, 0.4);
+}
+
+.quiz-item h4 {
+  font-family: 'Roboto', sans-serif;
+  font-size: 1.3rem;
+  color: white;
+  margin: 0;
+}
+
+.quiz-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.quiz-actions button {
+  padding: 6px 15px;
+  font-size: 1rem;
+}
+
+.no-quizzes {
+  font-family: 'Roboto', sans-serif;
+  font-size: 1.2rem;
+  color: #2eddea;
+  text-align: center;
+  padding: 10px;
+}
+
+footer {
+  text-align: center;
+  padding: 20px;
+  font-size: 0.9rem;
+  background-color: rgba(0, 0, 0, 0.6);
+  color: white;
+  margin-top: 20px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .profile-container {
+    padding: 20px;
+  }
+
+  .profile-title {
+    font-size: 2.2rem;
+  }
+
+  .section-title {
+    font-size: 1.5rem;
+  }
+
+  .info-card, .edit-form, .delete-confirmation {
+    max-width: 100%;
+  }
+
+  .quiz-item {
+    flex-direction: column;
+    gap: 10px;
+    text-align: center;
+  }
+
+  .quiz-actions {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .form-actions {
+    flex-direction: column;
+    gap: 10px;
+  }
+}

@@ -13,4 +13,12 @@ const healthy: RequestHandler = async (req, res) => {
   res.status(200).send(response)
 }
 
-export { healthy }
+const checkusertoken : RequestHandler = async (req, res) => {
+  const response: HealthResponse = {
+    status: "Healthy",
+    message: "The Toker user is exist",
+  }
+  res.status(200).send(response)
+}
+
+export { healthy , checkusertoken } 

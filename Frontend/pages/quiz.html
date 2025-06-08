@@ -1,69 +1,40 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Accent Arena - Quiz</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../styles/global.css">
-    <link rel="stylesheet" href="../styles/quiz.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quiz - QuizNight!</title>
+  <link rel="stylesheet" href="../styles/quiz.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Henny+Penny&family=Roboto&family=Peralta&family=Balsamiq+Sans&display=swap" rel="stylesheet">
 </head>
 <body>
-    <nav class="navbar">
-        <a href="index.html" class="navbar-brand">Accent Arena</a>
-        <div class="navbar-links">
-            <a href="quiz.html">Play Quiz</a>
-            <a href="userList.html">Leaderboard</a>
-            <a href="login.html">Login</a>
-            <a href="signup.html">Sign Up</a>
-            <button class="logout-btn">Log Out</button>
+  <div class="overlay">
+    <header>
+      <div class="logo">QuizNight !</div>
+      <div class="header-buttons">
+        <button class="profile-button" id="profileBtn">Profile</button>
+        <button class="logout-button" id="logoutBtn" title="Déconnexion">
+          <img src="../assets/logout.png" alt="Déconnexion" class="logout-icon" />
+        </button>
+      </div>
+    </header>
+
+    <main>
+      <div class="main-container">
+        <div class="quiz-container">
+          <h2 class="quiz-title" id="quizTitle"></h2>
+          <div class="question-container" id="questionContainer"></div>
+          <button class="submit-button" id="submitBtn">Soumettre</button>
+          <div class="score" id="score">Score: 0</div>
         </div>
-    </nav>
-    <div class="container">
-        <div class="quiz-card">
-            <div class="score-board">
-                <span>Score: <span id="score">0</span></span>
-                <span>Question: <span id="question-number">1</span>/<span id="total-questions">5</span></span>
-            </div>
-            <div class="progress-bar">
-                <div class="progress-fill" id="progress-fill"></div>
-            </div>
-            <div class="question">
-                <h2 id="word">Loading...</h2>
-                <p id="prompt">Is this a British or American accent?</p>
-            </div>
-            <div class="audio-controls">
-                <button class="btn audio-btn" id="audio-play">
-                    <img src="../assets/icons/mic.png" alt="Play Audio" class="mic-icon">
-                    Play Audio
-                </button>
-            </div>
-            <div class="answer-controls">
-                <button class="btn primary-btn" id="choose-british">
-                    <img src="../assets/icons/uk.png" alt="British Flag" class="flag-icon">
-                    British
-                </button>
-                <button class="btn primary-btn" id="choose-american">
-                    <img src="../assets/icons/usa.png" alt="American Flag" class="flag-icon">
-                    American
-                </button>
-            </div>
-            <div class="feedback" id="feedback"></div>
-            <button class="btn secondary-btn" id="next-question" style="display: none;">Next Question</button>
-        </div>
-        <div class="profile-sidebar">
-            <button id="profile-toggle" class="profile-toggle">☰</button>
-            <div class="profile-content">
-                <h3 id="profile-name">Loading...</h3>
-                <p id="profile-email">Loading...</p>
-                <p id="profile-score">Best Score: <span>0</span></p>
-                <button id="logout-btn" class="btn logout-btn" title="Log Out">
-                    <img src="../assets/icons/logout.png" alt="Log Out">
-                </button>
-            </div>
-        </div>
-    </div>
-    <script src="../scripts/global.js"></script>
-    <script src="../scripts/quiz.js"></script>
+      </div>
+    </main>
+
+    <footer>
+      <p>&copy; 2025 QuizNight. Tous droits réservés. Yassine Hallous</p>
+    </footer>
+  </div>
+
+  <script src="../scripts/quiz.js"></script>
 </body>
 </html>

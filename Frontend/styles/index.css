@@ -1,0 +1,136 @@
+/* Global Styles */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', sans-serif;
+    background: url('../assets/Background.png') no-repeat center center fixed;
+    background-size: cover;
+    color: white;
+    height: 100vh;
+  }
+  
+  .overlay {
+    background-color: rgba(0, 0, 0, 0.7); /* Slight dimming overlay */
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  
+  /* Header */
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 25px 50px;
+    background: transparent;
+  }
+  
+  .logo {
+    font-family: 'Henny Penny', cursive;
+    font-size: 2.5rem;
+    color: #2edeea;
+    text-shadow: 1px 1px 4px black;
+  }
+  
+  .login-button {
+    font-family: 'Balsamiq Sans', cursive;
+    background-color: transparent;
+    border: 2px solid #2edeea;
+    color: white;
+    padding: 10px 22px;
+    font-size: 1rem;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+  }
+  .login-button:hover {
+    background-color: #2edeea;
+    color: black;
+  }
+  
+  /* Main content */
+  main {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    padding-bottom: 40px;
+  }
+  
+  .main-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    max-width: 1200px;
+    width: 100%;
+  }
+  
+  .content {
+    max-width: 60%;
+    z-index: 2;
+  }
+  
+  h1 {
+    font-family: 'Henny Penny', cursive;
+    font-size: 3.5rem;
+    margin-bottom: 20px;
+    color: white;
+    text-shadow: 2px 2px 4px #2edeea;
+  }
+  
+  .highlight {
+    font-weight: bold;
+    color: #2edeea;
+  }
+  
+  p {
+    font-family: 'Balsamiq Sans', cursive;
+    font-size: 1.3rem;
+    margin: 10px 0;
+    line-height: 1.6;
+    color: white;
+  }
+  
+  .play-button {
+    margin-top: 25px;
+    padding: 14px 30px;
+    font-size: 1.2rem;
+    background-color: #2edeea;
+    color: black;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'Balsamiq Sans', cursive;
+  }
+  .play-button:hover {
+    background-color: transparent;
+    border: 2px solid #2edeea;
+    color: white;
+  }
+  
+  /* Question mark */
+  .question-mark {
+    font-family: 'Peralta', cursive;
+    font-size: 20rem;
+    color: #2edeea;
+    opacity: 0.2;
+    position: absolute;
+    right: 0;
+    bottom: -60px;
+    z-index: 1;
+    pointer-events: none;
+  }
+  
+  /* Footer */
+  footer {
+    text-align: center;
+    padding: 20px;
+    font-size: 0.95rem;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: white;
+  }
+  

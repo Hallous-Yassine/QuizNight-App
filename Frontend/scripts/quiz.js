@@ -1,231 +1,269 @@
-document.addEventListener('DOMContentLoaded', async () => {
-    // Sample quiz data
-    const quizData = [
-        { word: 'Schedule', accents: [
-            { type: 'British', audio: '../assets/audio/sample-british.mp3' },
-            { type: 'American', audio: '../assets/audio/sample-american.mp3' },
-        ]},
-        { word: 'Aluminium', accents: [
-            { type: 'British', audio: '../assets/audio/sample-british.mp3' },
-            { type: 'American', audio: '../assets/audio/sample-american.mp3' },
-        ]},
-        { word: 'Tomato', accents: [
-            { type: 'British', audio: '../assets/audio/sample-british.mp3' },
-            { type: 'American', audio: '../assets/audio/sample-american.mp3' },
-        ]},
-        { word: 'Advertisement', accents: [
-            { type: 'British', audio: '../assets/audio/sample-british.mp3' },
-            { type: 'American', audio: '../assets/audio/sample-american.mp3' },
-        ]},
-        { word: 'Garage', accents: [
-            { type: 'British', audio: '../assets/audio/sample-british.mp3' },
-            { type: 'American', audio: '../assets/audio/sample-american.mp3' },
-        ]},
-    ];
+document.addEventListener('DOMContentLoaded', async function() {
+  const authToken = localStorage.getItem('authToken');
+  if (!authToken) {
+    alert('Veuillez vous connecter pour accéder à cette page.');
+    window.location.href = './signin.html';
+    return;
+  }
 
-    // Check authentication
-    const token = localStorage.getItem('token');
-    let user;
+  const urlParams = new URLSearchParams(window.location.search);
+  const quizId = urlParams.get('quizId');
+  const quizTitle = document.getElementById('quizTitle');
+  const questionContainer = document.getElementById('questionContainer');
+  const submitBtn = document.getElementById('submitBtn');
+  const scoreDisplay = document.getElementById('score');
+  let score = 0;
+  let currentQuestionIndex = 0;
+  let questions = [];
+
+  // Fetch quiz data by ID
+  async function fetchQuizData() {
     try {
-        user = JSON.parse(localStorage.getItem('user'));
+      const response = await fetch(`http://localhost:3000/quiz/${quizId}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${authToken}`
+        }
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        quizTitle.textContent = data.title;
+      } else {
+        const error = await response.json();
+        alert('Erreur lors du chargement du quiz : ' + (error.message || 'Veuillez réessayer.'));
+        return false;
+      }
     } catch (error) {
-        console.error('Error parsing user data from localStorage:', error);
+      console.error('Erreur réseau:', error);
+      alert('Une erreur s\'est produite. Vérifiez votre connexion.');
+      return false;
+    }
+    return true;
+  }
+
+  // Fetch quiz questions by quiz ID and order them
+  async function fetchQuizQuestions() {
+    try {
+      const response = await fetch(`http://localhost:3000/question/${quizId}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${authToken}`
+        }
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        // Transform the questions into the expected format
+        questions = data
+          .sort((a, b) => a.question_number - b.question_number) // Order by question_number
+          .map(question => ({
+            text: question.question_text,
+            options: [question.option1, question.option2, question.option3, question.option4],
+            correctAnswer: question.correct_option - 1 // Adjust to 0-based index
+          }));
+        displayQuestion();
+      } else {
+        const error = await response.json();
+        alert('Erreur lors du chargement des questions : ' + (error.message || 'Veuillez réessayer.'));
+        return false;
+      }
+    } catch (error) {
+      console.error('Erreur réseau:', error);
+      alert('Une erreur s\'est produite. Vérifiez votre connexion.');
+      return false;
+    }
+    return true;
+  }
+
+  // Display current question
+  function displayQuestion() {
+    if (currentQuestionIndex >= questions.length) {
+      endQuiz();
+      return;
     }
 
-    if (!token || !user || !user.id) {
-        console.log('Authentication failed: Missing token or user data', { token, user });
-        alert('Please log in to play the quiz.');
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
-        window.location.href = 'login.html';
+    const question = questions[currentQuestionIndex];
+    questionContainer.innerHTML = `
+      <h3>${question.text}</h3>
+      ${question.options.map((option, index) => `
+        <div>
+          <input type="radio" name="answer" value="${index}" id="option${index}">
+          <label for="option${index}">${option}</label>
+        </div>
+      `).join('')}
+    `;
+  }
+
+  // Handle quiz submission
+  submitBtn.addEventListener('click', function() {
+    const selectedOption = document.querySelector('input[name="answer"]:checked');
+    if (!selectedOption) {
+      alert('Veuillez sélectionner une réponse.');
+      return;
+    }
+
+    const question = questions[currentQuestionIndex];
+    const selectedIndex = parseInt(selectedOption.value);
+    if (selectedIndex === question.correctAnswer) {
+      score += 1;
+      scoreDisplay.textContent = `Score: ${score}`;
+    } else {
+      alert(`Mauvaise réponse ! La réponse correcte était : ${question.options[question.correctAnswer]}`);
+    }
+
+    currentQuestionIndex += 1;
+    displayQuestion();
+  });
+
+  // End quiz, display final score, add separator, and centered Home button
+  async function endQuiz() {
+    questionContainer.innerHTML = `
+      <h3>Quiz terminé ! Votre score : ${score} / ${questions.length}</h3>
+      <div class="separator"></div>
+      <div class="home-button-container">
+        <button class="home-button">Home</button>
+      </div>
+    `;
+    submitBtn.style.display = 'none';
+    await updateUserScore();
+  }
+
+  // Update user score with best score logic
+  async function updateUserScore() {
+    try {
+      const userId = localStorage.getItem('userId');
+      if (!userId) {
+        console.error('User ID not found in localStorage');
         return;
+      }
+
+      // Fetch the best score for this user and quiz to get the userquizscoreId
+      const checkResponse = await fetch(`http://localhost:3000/userquizscore/user/${userId}/quiz/${quizId}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${authToken}`
+        }
+      });
+
+      let currentBestScore = 0;
+      let userquizscoreId = null;
+      if (checkResponse.ok) {
+        const data = await checkResponse.json();
+        currentBestScore = data.bestScore || 0;
+        userquizscoreId = data.id; // Extract the id from the response
+      }
+
+      // Create or update the entry based on existence and score
+      if (!userquizscoreId) {
+        // If no entry exists for this quiz, create it with the current score
+        const createResponse = await fetch(`http://localhost:3000/userquizscore/`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${authToken}`
+          },
+          body: JSON.stringify({ userId, quizId, bestScore: score })
+        });
+
+        if (!createResponse.ok) {
+          const error = await createResponse.json();
+          console.error('Erreur lors de la création du UserQuizScore:', error.message);
+          return;
+        }
+
+        const createdData = await createResponse.json();
+        userquizscoreId = createdData.id; // Get the newly created id
+      } else if (score > currentBestScore) {
+        // Update only if the new score is higher
+        const updateResponse = await fetch(`http://localhost:3000/userquizscore/${userquizscoreId}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          'Authorization': `Bearer ${authToken}`
+          },
+          body: JSON.stringify({ userId, quizId, bestScore: score })
+        });
+
+        if (!updateResponse.ok) {
+          const error = await updateResponse.json();
+          console.error('Erreur lors de la mise à jour du bestScore:', error.message);
+          return;
+        }
+      }
+
+      // Recalculate total best score from all UserQuizScore entries
+      const totalResponse = await fetch(`http://localhost:3000/userquizscore/total/${userId}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${authToken}`
+        }
+      });
+
+      if (totalResponse.ok) {
+        const totalData = await totalResponse.json();
+        const newUserScore = totalData.total || 0;
+        console.log('New total score:', newUserScore);
+
+        // Update the user score in the User table
+        const userUpdateResponse = await fetch(`http://localhost:3000/user/score/${userId}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${authToken}`
+          },
+          body: JSON.stringify({ score: newUserScore })
+        });
+
+        if (userUpdateResponse.ok) {
+          localStorage.setItem('score', newUserScore.toString()); // Update localStorage
+        } else {
+          const error = await userUpdateResponse.json();
+          console.error('Erreur lors de la mise à jour du score utilisateur:', error.message);
+        }
+      }
+    } catch (error) {
+      console.error('Erreur réseau lors de la mise à jour du score:', error);
     }
+  }
 
-    // Quiz State
-    let currentQuestion = 0;
-    let score = 0;
-    let selectedAccent = null;
-    let hasPlayedAudio = false;
+  // Add event listener for the Home button
+  questionContainer.addEventListener('click', function(e) {
+    if (e.target.className === 'home-button') {
+      window.location.href = './home.html';
+    }
+  });
 
-    // Elements
-    const quizCard = document.querySelector('.quiz-card');
-    const profileNameEl = document.getElementById('profile-name');
-    const profileEmailEl = document.getElementById('profile-email');
-    const profileScoreEl = document.getElementById('profile-score').querySelector('span');
-    const logoutBtn = document.getElementById('logout-btn');
-    const profileToggle = document.getElementById('profile-toggle');
-    const profileContent = document.querySelector('.profile-content');
-    const wordEl = document.getElementById('word');
-    const promptEl = document.getElementById('prompt');
-    const scoreEl = document.getElementById('score');
-    const questionNumberEl = document.getElementById('question-number');
-    const totalQuestionsEl = document.getElementById('total-questions');
-    const progressFill = document.getElementById('progress-fill');
-    const audioPlayBtn = document.getElementById('audio-play');
-    const chooseBritishBtn = document.getElementById('choose-british');
-    const chooseAmericanBtn = document.getElementById('choose-american');
-    const feedbackEl = document.getElementById('feedback');
-    const nextQuestionBtn = document.getElementById('next-question');
+  // Navigation and logout
+  const logo = document.querySelector('.logo');
+  logo.style.cursor = 'pointer';
+  logo.addEventListener('click', function() {
+    window.location.href = './index.html';
+  });
 
-    // Delay card visibility for smoother load
-    quizCard.style.opacity = '0';
-    setTimeout(() => {
-        quizCard.style.opacity = '1';
-    }, 100);
+  const profileBtn = document.getElementById('profileBtn');
+  profileBtn.addEventListener('click', function() {
+    window.location.href = `./profile.html?token=${authToken}`;
+  });
 
-    // Initialize profile
-    profileNameEl.textContent = user.full_name || 'Guest User';
-    profileEmailEl.textContent = user.email || 'guest@example.com';
+  const logoutBtn = document.getElementById('logoutBtn');
+  logoutBtn.addEventListener('click', function() {
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('userId');
+    localStorage.removeItem('full_name');
+    localStorage.removeItem('email');
+    localStorage.removeItem('score');
+    alert('Vous êtes déconnecté.');
+    window.location.href = './index.html';
+  });
 
-    // Fetch and display user's best score
-    const fetchBestScore = async () => {
-        try {
-            const response = await fetch(`http://localhost:3000/user/score/${user.id}`, {
-                headers: { 'Authorization': `Bearer ${token}` },
-            });
-            if (!response.ok) {
-                if (response.status === 401) {
-                    throw new Error('Unauthorized: Invalid or expired token');
-                }
-                throw new Error(`Failed to fetch score: ${response.status}`);
-            }
-            const data = await response.json();
-            profileScoreEl.textContent = data.score || 0;
-        } catch (error) {
-            console.error('Error fetching best score:', error);
-            if (error.message.includes('Unauthorized')) {
-                alert('Session expired. Please log in again.');
-                localStorage.removeItem('token');
-                localStorage.removeItem('user');
-                window.location.href = 'login.html';
-            } else {
-                profileScoreEl.textContent = 0;
-            }
-        }
-    };
-    await fetchBestScore();
-
-    // Profile Toggle
-    profileToggle.addEventListener('click', () => {
-        profileContent.classList.toggle('active');
-    });
-
-    // Logout (handled in global.js, but keep for sidebar)
-    logoutBtn.addEventListener('click', () => {
-        localStorage.removeItem('user');
-        localStorage.removeItem('token');
-        alert('Logged out successfully.');
-        window.location.href = 'login.html';
-    });
-
-    // Quiz Logic
-    const loadQuestion = () => {
-        const q = quizData[currentQuestion];
-        wordEl.textContent = q.word;
-        selectedAccent = q.accents[Math.floor(Math.random() * 2)];
-        promptEl.textContent = 'Is this a British or American accent?';
-        scoreEl.textContent = score;
-        questionNumberEl.textContent = currentQuestion + 1;
-        progressFill.style.width = `${((currentQuestion + 1) / quizData.length) * 100}%`;
-        feedbackEl.textContent = '';
-        feedbackEl.className = 'feedback';
-        nextQuestionBtn.style.display = 'none';
-        chooseBritishBtn.disabled = true;
-        chooseAmericanBtn.disabled = true;
-        audioPlayBtn.classList.remove('playing');
-        hasPlayedAudio = false;
-    };
-
-    const playAudio = (src) => {
-        const audio = new Audio(src);
-        audioPlayBtn.classList.add('playing');
-        audio.play();
-        audio.onended = () => {
-            audioPlayBtn.classList.remove('playing');
-            hasPlayedAudio = true;
-            chooseBritishBtn.disabled = false;
-            chooseAmericanBtn.disabled = false;
-        };
-    };
-
-    audioPlayBtn.addEventListener('click', () => {
-        playAudio(selectedAccent.audio);
-    });
-
-    const checkAnswer = (chosenAccent) => {
-        chooseBritishBtn.disabled = true;
-        chooseAmericanBtn.disabled = true;
-
-        if (chosenAccent === selectedAccent.type) {
-            score += 10;
-            feedbackEl.textContent = 'Correct! Well done!';
-            feedbackEl.className = 'feedback correct';
-            for (let i = 0; i < 20; i++) {
-                const confetti = document.createElement('div');
-                confetti.className = 'confetti';
-                confetti.style.left = `${Math.random() * 100}%`;
-                quizCard.appendChild(confetti);
-                setTimeout(() => confetti.remove(), 2000);
-            }
-        } else {
-            feedbackEl.textContent = `Incorrect. It was the ${selectedAccent.type} accent.`;
-            feedbackEl.className = 'feedback incorrect';
-        }
-
-        scoreEl.textContent = score;
-        nextQuestionBtn.style.display = 'block';
-    };
-
-    chooseBritishBtn.addEventListener('click', () => {
-        if (!chooseBritishBtn.disabled) {
-            checkAnswer('British');
-        }
-    });
-
-    chooseAmericanBtn.addEventListener('click', () => {
-        if (!chooseAmericanBtn.disabled) {
-            checkAnswer('American');
-        }
-    });
-
-    nextQuestionBtn.addEventListener('click', async () => {
-        currentQuestion++;
-        if (currentQuestion < quizData.length) {
-            loadQuestion();
-        } else {
-            try {
-                const response = await fetch(`http://localhost:3000/user/score/${user.id}`, {
-                    method: 'PUT',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ score }),
-                });
-                if (!response.ok) {
-                    if (response.status === 401) {
-                        throw new Error('Unauthorized: Invalid or expired token');
-                    }
-                    throw new Error(`Failed to update score: ${response.status}`);
-                }
-                localStorage.setItem('finalScore', score);
-                window.location.href = 'retry.html';
-            } catch (error) {
-                console.error('Error updating score:', error);
-                if (error.message.includes('Unauthorized')) {
-                    alert('Session expired. Please log in again.');
-                    localStorage.removeItem('token');
-                    localStorage.removeItem('user');
-                    window.location.href = 'login.html';
-                } else {
-                    alert('Failed to save score. Proceeding to results.');
-                    localStorage.setItem('finalScore', score);
-                    window.location.href = 'retry.html';
-                }
-            }
-        }
-    });
-
-    totalQuestionsEl.textContent = quizData.length;
-    loadQuestion();
+  // Initial fetch
+  const quizFetched = await fetchQuizData();
+  if (quizFetched) {
+    await fetchQuizQuestions();
+  }
 });

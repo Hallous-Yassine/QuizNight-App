@@ -1,0 +1,116 @@
+/* Global Styles */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', sans-serif;
+    background: url('../assets/Background.png') no-repeat center center fixed;
+    background-size: cover;
+    color: white;
+    height: 100vh;
+  }
+  
+  .overlay {
+    background-color: rgba(0, 0, 0, 0.7); /* Slight dimming overlay */
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  
+  /* Header */
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 25px 50px;
+    background: transparent;
+  }
+  
+  .logo {
+    font-family: 'Henny Penny', cursive;
+    font-size: 2.5rem;
+    color: #2edeea;
+    text-shadow: 1px 1px 4px black;
+  }
+  
+  /* Main */
+  main {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-bottom: 40px;
+  }
+  
+  /* Login Form Container */
+  .form-container {
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 2px solid #2edeea;
+    box-shadow: 0 0 15px rgba(46, 222, 234, 0.6);
+    border-radius: 12px;
+    padding: 40px 30px;
+    max-width: 400px;
+    width: 100%;
+    text-align: center;
+  }
+  
+  .form-container h1 {
+    font-family: 'Henny Penny', cursive;
+    font-size: 2.5rem;
+    margin-bottom: 25px;
+    color: white;
+    text-shadow: 1px 1px 4px #2edeea;
+  }
+  
+  .form-container input {
+    width: 70%;
+    padding: 12px;
+    margin-bottom: 25px;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+  }
+  
+  .form-container button {
+    font-family: 'Balsamiq Sans', cursive;
+    background-color: transparent;
+    border: 2px solid #2edeea;
+    color: white;
+    padding: 10px 22px;
+    font-size: 1rem;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    margin-bottom: 15px;
+  }
+  
+  .form-container button:hover {
+    background-color: #2edeea;
+    color: black;
+  }
+  
+  .signup-link {
+    font-family: 'Balsamiq Sans', cursive;
+    margin-top: 15px;
+    font-size: 1rem;
+  }
+  
+  .highlight {
+    font-weight: bold;
+    color: #2edeea;
+    text-decoration: none;
+  }
+  
+  .highlight:hover {
+    text-decoration: underline;
+  }
+  
+  /* Footer */
+  footer {
+    text-align: center;
+    padding: 20px;
+    font-size: 0.95rem;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: white;
+  }
+  

@@ -3,7 +3,7 @@ import { appDataSource } from "./config";
 import express from "express";
 import http from "http";
 import cors from "cors";
-import { userRouter , healthRouter } from "./routes"; 
+import { userRouter , healthRouter , quizRouter , questionRouter , userQuizScoreRouter , uploadRouter} from "./routes"; 
 import color from "cli-color"; 
 
 const app = express();
@@ -15,6 +15,10 @@ app.use(cors());
 
 app.use("/health", healthRouter);
 app.use("/user", userRouter); 
+app.use("/quiz", quizRouter);
+app.use("/question", questionRouter);
+app.use("/userQuizScore", userQuizScoreRouter);
+app.use("/upload", uploadRouter);
 
 
 async function startServer() {

@@ -10,7 +10,7 @@ const appDataSource = new DataSource({
   port: Number(process.env.DBPORT) || 5432,
   username: process.env.DBUSER || "postgres",
   password: process.env.PASS || "yassine",
-  database: process.env.DATABASE || "OST_QUIZ",
+  database: process.env.DATABASE || "QuizNight",
   entities: [__dirname + "/../models/*.ts"], 
   synchronize: true,
   ssl: process.env.SSL === "true" ? { rejectUnauthorized: false } : false,

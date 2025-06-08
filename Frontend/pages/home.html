@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Accueil - QuizNight!</title>
+  <link rel="stylesheet" href="../styles/home.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Henny+Penny&family=Roboto&family=Peralta&family=Balsamiq+Sans&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="overlay">
+    <header>
+      <div class="logo">QuizNight !</div>
+      <button class="profile-button" id="profileBtn">Profile</button>
+      <button class="logout-button" id="logoutBtn" title="Déconnexion">
+        <img src="../assets/logout.png" alt="Déconnexion" class="logout-icon" />
+      </button>
+    </header>
+
+    <main>
+      <div class="main-container">
+        <div class="welcome-text">
+          <h1>Bienvenue Utilisateur !</h1>
+        </div>
+        <div class="leaderboard-container">
+          <div class="leaderboard">
+            <h2>Meilleurs scores</h2>
+            <ul id="topUsers">
+              <!-- Populated dynamically by home.js -->
+            </ul>
+          </div>
+          <div class="question-mark">?</div>
+        </div>
+
+        <div class="quiz-section">
+          <h2 class="quiz-title">Quiz disponibles</h2>
+          <div class="quiz-grid">
+            <div class="quiz-card" data-quiz="create-quiz">
+              <img src="../assets/create-quiz.jpg" alt="Crée ton quiz" />
+              <h3>Crée ton quiz</h3>
+              <p>Laisse libre cours à ta créativité ! Crée tes propres questions et défis tes amis avec ton propre quiz. 🎯✨</p>
+            </div>
+            <!-- Other quizzes populated dynamically by home.js -->
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      <p>&copy; 2025 QuizNight. Tous droits réservés. Yassine Hallous</p>
+    </footer>
+  </div>
+
+  <script src="../scripts/home.js"></script>
+</body>
+</html>

@@ -1,32 +1,47 @@
-import { Entity, BaseEntity, Column, PrimaryGeneratedColumn , OneToMany , } from "typeorm";
+import {
+  Entity,
+  BaseEntity,
+  Column,
+  PrimaryGeneratedColumn,
+  OneToMany,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from "typeorm";
+import Quiz from "./quiz";
+import UserQuizScore from "./UserQuizScore";
 
-
-//add the rest of the fields to the User entity
 @Entity()
 class User extends BaseEntity {
   @PrimaryGeneratedColumn()
-  id: number
+  id: number; 
 
   @Column()
-  full_name: string
+  full_name: string;
 
   @Column({ unique: true })
-  phone: string
+  phone: string;
 
   @Column({ unique: true })
-  email: string
+  email: string;
 
   @Column()
-  password: string
+  password: string;
 
   @Column()
-  score: number
+  score: number;
 
-  @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
-  createdAt: Date
+  @CreateDateColumn()
+  createdAt: Date;
 
-  @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
-  updatedAt: Date
+  @UpdateDateColumn()
+  updatedAt: Date;
+
+  // DELETE EN CASCADE
+  @OneToMany(() => Quiz, (quiz) => quiz.createdBy, { onDelete: "CASCADE" })
+  quizzes: Quiz[];
+
+  @OneToMany(() => UserQuizScore, (score) => score.user, { onDelete: "CASCADE" })
+  userQuizScores: UserQuizScore[];
 }
 
-export default User
+export default User;

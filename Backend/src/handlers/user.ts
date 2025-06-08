@@ -16,6 +16,7 @@ interface UpdateUserRequest {
   email?: string;
   phone?: string;
   password?: string;
+  currentPassword: string; // For password update
 }
 
 interface LoginRequest {
@@ -51,6 +52,7 @@ const getUserById: RequestHandler = async (req, res) => {
     res.status(400).json({ message: "Invalid user ID" });
     return;
   }
+
   try {
     const user = await userService.getUserById(id);
     if (!user) {
@@ -65,6 +67,7 @@ const getUserById: RequestHandler = async (req, res) => {
   }
 };
 
+
 const createUser: RequestHandler = async (req, res) => {
   const { full_name, email, phone, password } = req.body as CreateUserRequest;
 
@@ -78,6 +81,12 @@ const createUser: RequestHandler = async (req, res) => {
     // Validate email format
     if (!/\S+@\S+\.\S+/.test(email)) {
       res.status(400).json({ message: "Invalid email format" });
+      return;
+    }
+
+    // Validate phone format (basic validation, adjust regex as needed)
+    if (!/^\+?[1-9]\d{1,14}$/.test(phone.trim())) {
+      res.status(400).json({ message: "Invalid phone number format (e.g., +1234567890)" });
       return;
     }
 
@@ -102,11 +111,11 @@ const createUser: RequestHandler = async (req, res) => {
     // Create the new user
     const newUser = await userService.createUser({
       full_name: full_name.trim(),
-      email: email.trim(),
       phone: phone.trim(),
+      email: email.trim(),
       password: hashedPassword,
-      score : 0, // Default score
-      });
+      score: 0, // Default score
+    });
 
     // Remove password from response and generate JWT token
     const { password: _, ...safeUser } = newUser;
@@ -119,13 +128,19 @@ const createUser: RequestHandler = async (req, res) => {
     });
   } catch (error) {
     console.error('Create user error:', error);
-    res.status(500).json({ message: "Internal server error" });
+    res.status(500).json({ message: "Internal server error", details: error });
   }
 };
 
+
+// Update user handler
+// body: JSON.stringify({ full_name, email, password, currentPassword })
+// verify currentPassword with bcrypt.compare
+// if valid, update user with new password and other fields
+// if not valid, return 401 Unauthorized
 const updateUser: RequestHandler = async (req, res) => {
   const id = parseInt(req.params.id, 10);
-  const { full_name, email, phone, password } = req.body as UpdateUserRequest;
+  const { full_name, email, phone, password , currentPassword } = req.body as UpdateUserRequest;
 
   if (isNaN(id)) {
     res.status(400).json({ message: "Invalid user ID" });
@@ -139,28 +154,31 @@ const updateUser: RequestHandler = async (req, res) => {
       return;
     }
 
-    if (email && !/\S+@\S+\.\S+/.test(email)) {
-      res.status(400).json({ message: "Invalid email format" });
-      return;
+    // Hash the new password if provided
+    let hashedPassword = user.password;
+    if (password) {
+      const saltRounds = parseInt(process.env.SALT_ROUNDS || "10", 10);
+      hashedPassword = await bcrypt.hash(password, saltRounds);
     }
 
-    if (email && email.trim() !== user.email) {
-      const existingUser = await userService.findOneBy('email', email.trim());
-      if (existingUser) {
-        res.status(400).json({ message: "Email already in use" });
+    // compare current password with the existing password
+    if (currentPassword) {
+      const isPasswordValid = await bcrypt.compare(currentPassword, user.password);
+      if (!isPasswordValid) {
+        res.status(401).json({ message: "Invalid current password" });
         return;
       }
     }
 
-    const updates: Partial<CreateUserRequest> = {};
-    if (full_name) updates.full_name = full_name.trim();
-    if (email) updates.email = email.trim();
-    if (phone) updates.phone = phone.trim();
-    if (password) updates.password = await bcrypt.hash(password, parseInt(process.env.SALT_ROUNDS || "10", 10));
+    // Update user details
+    const updatedUser = await userService.updateUser(id, {
+      full_name: full_name?.trim() || user.full_name,
+      email: email?.trim() || user.email,
+      phone: phone?.trim() || user.phone,
+      password: hashedPassword,
+    });
 
-    const updatedUser = await userService.updateUser(id, updates);
     const { password: _, ...safeUser } = updatedUser;
-
     res.status(200).json({
       message: "User updated successfully",
       user: safeUser,
@@ -170,9 +188,10 @@ const updateUser: RequestHandler = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
-
+// body: JSON.stringify({ password })
 const deleteUser: RequestHandler = async (req, res) => {
   const id = parseInt(req.params.id, 10);
+
   if (isNaN(id)) {
     res.status(400).json({ message: "Invalid user ID" });
     return;
@@ -183,6 +202,15 @@ const deleteUser: RequestHandler = async (req, res) => {
     if (!user) {
       res.status(404).json({ message: "User not found" });
       return;
+    }
+    // check the password if provided
+    const password = req.body.password;
+    if (password) {
+      const isPasswordValid = await bcrypt.compare(password, user.password);
+      if (!isPasswordValid) {
+        res.status(401).json({ message: "Invalid password" });
+        return;
+      }
     }
     await userService.deleteUser(id);
     // Token is "destroyed" by client-side action (discard token) or expiration
@@ -330,5 +358,20 @@ const updateUserScore: RequestHandler = async (req, res) => {
   }
 };
 
-export { getAllUsers, getUserById, createUser, updateUser, deleteUser, loginUser, findOneBy, findOneByHandler, logoutUser , getUserScore, updateUserScore };
+const top5Users: RequestHandler = async (req, res) => {
+  try {
+    const users = await userService.top5Users();
+    if (!users || users.length === 0) {
+      res.status(404).json({ message: "No users found" });
+      return;
+    }
+    const safeUsers = users.map(({ password, ...user }) => user);
+    res.status(200).json(safeUsers);
+  } catch (error) {
+    console.error('Get top 5 users error:', error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+}
+
+export { getAllUsers, getUserById, createUser, updateUser, deleteUser, loginUser, findOneBy, findOneByHandler, logoutUser , getUserScore, updateUserScore , top5Users };
 

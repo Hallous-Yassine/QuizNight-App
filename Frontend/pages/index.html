@@ -1,33 +1,37 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Accent Arena - Home</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../styles/global.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QuizNight!</title>
+  <link rel="stylesheet" href="../styles/index.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Henny+Penny&family=Roboto&family=Peralta&family=Balsamiq+Sans&display=swap" rel="stylesheet">
 </head>
 <body>
-    <nav class="navbar">
-        <a href="index.html" class="navbar-brand">Accent Arena</a>
-        <div class="navbar-links">
-            <a href="quiz.html">Play Quiz</a>
-            <a href="userList.html">Leaderboard</a>
-            <a href="login.html">Login</a>
-            <a href="signup.html">Sign Up</a>
-            <button class="logout-btn">Log Out</button>
+  <div class="overlay">
+    <header>
+      <div class="logo">QuizNight !</div>
+      <button class="login-button" id="loginBtn">S'inscrire</button>
+    </header>
+
+    <main>
+      <div class="main-container">
+        <div class="content">
+          <h1>Bienvenue sur <span class="highlight">QuizNight!</span></h1>
+          <p>Testez vos connaissances et affrontez vos amis dans un quiz fun et dynamique !</p>
+          <p>Vous avez 5 minutes pour répondre à 7 questions…</p>
+          <p>Saurez-vous relever le défi ?</p>
+          <button class="play-button" id="playBtn">Prêt à jouer ?</button>
         </div>
-    </nav>
-    <div class="container">
-        <div class="hero-card">
-            <h1 class="title">Welcome to Accent Arena</h1>
-            <p class="subtitle">Test your ear for accents! Can you distinguish British from American pronunciations?</p>
-            <div class="hero-actions">
-                <a href="quiz.html" class="btn primary-btn">Start Quiz</a>
-                <a href="userList.html" class="btn secondary-btn">View Leaderboard</a>
-            </div>
-        </div>
-    </div>
-    <script src="../scripts/global.js"></script>
+        <div class="question-mark">?</div>
+      </div>
+    </main>
+
+    <footer>
+      <p>&copy; 2025 QuizNight. Tous droits réservés. Yassine Hallous</p>
+    </footer>
+  </div>
+
+  <script src="../scripts/index.js"></script>
 </body>
 </html>

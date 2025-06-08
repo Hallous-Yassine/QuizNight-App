@@ -27,7 +27,7 @@ const createUser = async (userData: Partial<User>) => {
     await userRepository.save(user);
     return user;
   } catch (error) {
-    throw new Error('Error : Cannot create user');
+    throw new Error(`Error: Cannot create user - ${error}`);
   }
 }
 
@@ -45,6 +45,8 @@ const updateUser = async (id: number, userData: Partial<User>) => {
   }
 }
 
+// delete user by id
+// there is an internal server error when deleting user
 const deleteUser = async (id: number) => {
   try {
     const user = await userRepository.findOneBy({ id });
@@ -52,6 +54,7 @@ const deleteUser = async (id: number) => {
       throw new Error('User not found');
     }
     await userRepository.remove(user);
+    return user;
   } catch (error) {
     throw new Error('Error : Cannot delete user');
   }
@@ -92,10 +95,25 @@ const updateUserScore = async (id: number, score: number) => {
   }
 }
 
+const top5Users = async () => {
+  try {
+    const users = await userRepository.find({
+      order: {
+        score: 'DESC'
+      },
+      take: 5
+    });
+    return users;
+  } catch (error) {
+    throw new Error('Error : Cannot get top 5 users');
+  }
+}
 
 export {
-  getAllUsers, getUserById, createUser, updateUser, deleteUser, findOneBy , getUserScore, updateUserScore
+  getAllUsers, getUserById, createUser, updateUser, deleteUser, findOneBy , getUserScore, updateUserScore , top5Users
 };
+
+
 
 
 

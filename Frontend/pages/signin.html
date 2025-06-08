@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Inscription - QuizNight!</title>
-  <link rel="stylesheet" href="../styles/signup.css" />
+  <title>Connexion - QuizNight!</title>
+  <link rel="stylesheet" href="../styles/signin.css" />
   <link href="https://fonts.googleapis.com/css2?family=Henny+Penny&family=Roboto&family=Peralta&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -12,27 +12,23 @@
     <header>
       <div class="logo">QuizNight !</div>
     </header>
-
+  
     <main>
       <div class="form-container">
-        <h1>Créer un compte</h1>
-        <form id="signupForm">
-          <input type="text" id="full_name" placeholder="Nom d'utilisateur" required />
+        <h1>Me Connecter !</h1>
+        <form id="loginForm">
           <input type="email" id="email" placeholder="Email" required />
-          <input type="tel" id="phone" placeholder="Numéro de téléphone" required />
           <input type="password" id="password" placeholder="Mot de passe" required />
-          <input type="password" id="confirmPassword" placeholder="Confirmer le mot de passe" required />
-          <button type="submit">S'inscrire</button>
+          <button type="submit">Se connecter</button>
         </form>
-        <p class="signup-link">Déjà un compte ? <a href="./signin.html" class="highlight">Connecte-toi ici</a></p>
+        <p class="signup-link">Pas encore de compte ? <a href="./signup.html" class="highlight">C'est par ici !</a></p>
       </div>
     </main>
-
+  
     <footer>
       <p>&copy; 2025 QuizNight. Tous droits réservés. Yassine Hallous</p>
     </footer>
   </div>
-
-  <script src="../scripts/signup.js"></script>
+  <script src="../scripts/signin.js"></script>
 </body>
 </html>
