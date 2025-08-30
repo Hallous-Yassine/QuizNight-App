@@ -4,7 +4,7 @@
 **QuizNight** is an interactive quiz game website designed to help you enhance your knowledge, create your own quizzes, and share them with friends to test their general culture.  
 
 ## Demo  
-![Initial Interface](assets/App Images/S1.png "SC1")
+[![Initial Interface](assets/App Images/S1.png "SC1")](https://github.com/Hallous-Yassine/QuizNight-App/blob/main/assets/App%20Images/S1.png)
 
 ## Installation  
 
