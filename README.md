@@ -5,6 +5,10 @@
 
 ## Demo  
 ![Initial Interface](https://github.com/Hallous-Yassine/QuizNight-App/blob/main/assets/App%20Images/S1.png)
+![Initial Interface](https://github.com/Hallous-Yassine/QuizNight-App/blob/main/assets/App%20Images/S2.png)
+![Initial Interface](https://github.com/Hallous-Yassine/QuizNight-App/blob/main/assets/App%20Images/S3.png)
+![Initial Interface](https://github.com/Hallous-Yassine/QuizNight-App/blob/main/assets/App%20Images/S4.png)
+![Initial Interface](https://github.com/Hallous-Yassine/QuizNight-App/blob/main/assets/App%20Images/S5.png)
 
 ## Installation  
 
